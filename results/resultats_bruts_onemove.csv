@@ -1,0 +1,11 @@
+instance,moveType,run,nbIter,K,nb_aretes,z0,z,valide,temps_s
+queen5_5,onemove,1,600,1500,160,87,75,true,0.079709558
+queen5_5,onemove,2,600,1500,160,87,75,true,0.078558783
+queen5_5,onemove,3,600,1500,160,87,75,true,0.098751326
+queen5_5,onemove,4,600,1500,160,87,75,true,0.318332207
+queen5_5,onemove,5,600,1500,160,87,75,true,0.067727171
+queen5_5,onemove,6,600,1500,160,87,75,true,0.064710471
+queen5_5,onemove,7,600,1500,160,87,75,true,0.330526902
+queen5_5,onemove,8,600,1500,160,87,75,true,0.065852116
+queen5_5,onemove,9,600,1500,160,87,75,true,0.097307683
+queen5_5,onemove,10,600,1500,160,87,75,true,0.310616076
