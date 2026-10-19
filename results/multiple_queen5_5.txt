@@ -1,6 +1,6 @@
 Instance                      : queen5_5
-Départ glouton                : 75
-Résultat obtenu               : 75
-Meilleure UB connue           : 75 (optimum prouvé)
-Meilleure LB connue           : 75
-✓ Optimum prouvé atteint.
+Greedy start                  : 81
+Result obtained               : 75
+Best known UB                 : 75 (proven optimum)
+Best known LB                 : 75
+✓ Proven optimum reached.

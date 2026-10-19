@@ -1,15 +1,15 @@
 # benchmarks.jl
 #
-# Meilleures valeurs connues (bornes inf./sup. f^b_LB, f^b_UB) rapportées dans :
+# Best known values (lower/upper bounds f^b_LB, f^b_UB) reported in:
 # Jin, Y., Hamiez, J.-P., Hao, J.-K. (2016). Algorithms for the minimum sum
 # coloring problem: a review. Artificial Intelligence Review. Table 3 (Appendix).
 #
-# Clé = nom de l'instance (nom du fichier .col sans l'extension).
-# lb == ub  =>  optimum prouvé.
-# lb <  ub  =>  ub est la meilleure solution réelle connue, mais l'écart
-#               avec lb reste ouvert (l'optimum pourrait être n'importe où entre les deux).
+# Key = instance name (name of the .col file without the extension).
+# lb == ub  =>  proven optimum.
+# lb <  ub  =>  ub is the best known solution, but the gap with lb is still
+#               open (the optimum could be anywhere between the two).
 
-const MEILLEURES_VALEURS_CONNUES = Dict{String, NamedTuple{(:lb, :ub), Tuple{Int,Int}}}(
+const BEST_KNOWN_VALUES = Dict{String, NamedTuple{(:lb, :ub), Tuple{Int,Int}}}(
     "myciel3"        => (lb=16,    ub=21),
     "myciel4"        => (lb=34,    ub=45),
     "myciel5"        => (lb=70,    ub=93),
@@ -108,47 +108,47 @@ const MEILLEURES_VALEURS_CONNUES = Dict{String, NamedTuple{(:lb, :ub), Tuple{Int
 
 
 """
-    comparer_resultat(nom_instance, f_obtenu, f_initial, fichier_resultats)
+    compare_to_best_known(instance_name, f_obtained, f_initial, results_file)
 
-Compare `f_obtenu` aux meilleures bornes connues de l'instance, affiche le
-bilan et l'ajoute à la fin de `fichier_resultats`.
+Compares `f_obtained` with the best known bounds of the instance, prints the
+summary and appends it to `results_file`.
 """
-function comparer_resultat(nom_instance::String, f_obtenu::Int,
-                           f_initial::Int,
-                           fichier_resultats::String)
+function compare_to_best_known(instance_name::String, f_obtained::Int,
+                               f_initial::Int,
+                               results_file::String)
     messages = String[]
     add_message(message) = push!(messages, message)
 
-    if !haskey(MEILLEURES_VALEURS_CONNUES, nom_instance)
-        add_message("Instance \"$nom_instance\" absente du tableau de référence (vérifier l'orthographe du nom).")
+    if !haskey(BEST_KNOWN_VALUES, instance_name)
+        add_message("Instance \"$instance_name\" not found in the reference table (check the instance name).")
     else
-        lb, ub = MEILLEURES_VALEURS_CONNUES[nom_instance]
-        optimal_prouve = (lb == ub)
+        lb, ub = BEST_KNOWN_VALUES[instance_name]
+        proven_optimal = (lb == ub)
 
-        add_message("Instance                      : $nom_instance")
-        add_message("Départ glouton                : $f_initial")
-        add_message("Résultat obtenu               : $f_obtenu")
+        add_message("Instance                      : $instance_name")
+        add_message("Greedy start                  : $f_initial")
+        add_message("Result obtained               : $f_obtained")
 
-        add_message("Meilleure UB connue           : $ub" * (optimal_prouve ? " (optimum prouvé)" : ""))
-        add_message("Meilleure LB connue           : $lb")
+        add_message("Best known UB                 : $ub" * (proven_optimal ? " (proven optimum)" : ""))
+        add_message("Best known LB                 : $lb")
 
-        if f_obtenu < lb
-            add_message("⚠ Résultat inférieur à la LB théorique : la coloration n'est probablement pas valide (conflits) !")
-        elseif f_obtenu == ub
-            add_message(optimal_prouve ? "✓ Optimum prouvé atteint." : "✓ Meilleure valeur publiée égalée.")
-        elseif f_obtenu < ub
-            add_message("★ Solution meilleure que la meilleure valeur publiée !")
+        if f_obtained < lb
+            add_message("⚠ Result below the theoretical LB: the coloring is probably not valid (conflicts)!")
+        elseif f_obtained == ub
+            add_message(proven_optimal ? "✓ Proven optimum reached." : "✓ Best published value matched.")
+        elseif f_obtained < ub
+            add_message("★ Solution better than the best published value!")
         else
-            ecart = f_obtenu - ub
-            pourcentage = round(100 * ecart / ub, digits=2)
-            add_message("Écart avec la meilleure UB connue : +$ecart ($pourcentage %)")
+            gap = f_obtained - ub
+            percentage = round(100 * gap / ub, digits=2)
+            add_message("Gap to the best known UB : +$gap ($percentage %)")
         end
     end
 
-    contenu = join(messages, "\n") * "\n"
-    print(stdout, contenu)
+    content = join(messages, "\n") * "\n"
+    print(stdout, content)
     flush(stdout)
-    open(fichier_resultats, "a") do fichier
-        print(fichier, contenu)
+    open(results_file, "a") do file
+        print(file, content)
     end
 end
